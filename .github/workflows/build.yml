@@ -1,0 +1,41 @@
+name: Build Zygisk Dump Dex
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install Just
+        run: cargo install just
+
+      - name: Install cargo-ndk and set up target
+        run: |
+          rustup target add aarch64-linux-android
+          cargo install cargo-ndk
+
+      - name: Build project
+        run: just package-release
+
+      - name: Upload built artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: zygisk-debug-zip
+          path: out/zygisk-debug.zip
+          compression-level: 9
