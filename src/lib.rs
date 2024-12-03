@@ -86,6 +86,7 @@ impl Module for MyModule {
 }
 
 register_zygisk_module!(MyModule);
+#[no_mangle]
 static mut OLD_OPEN_COMMON: usize = 0;
 
 pub extern "C" fn new_open_common_wrapper() {
