@@ -102,7 +102,7 @@ pub extern "C" fn new_open_common_wrapper() {
 
             mov x0, x1
             mov x1, x2
-            bl {new_open_common}
+            bl {0}
 
             ldp x29, x30, [sp, #0]
             ldp x0, x1, [sp, #0x10]
@@ -111,11 +111,11 @@ pub extern "C" fn new_open_common_wrapper() {
             ldp x6, x7, [sp, #0x40]
             ldp x8, x9, [sp, #0x50]
             add sp, sp, 0x280
-            adrp x16, {old_open_common}
-            ldr x16, [x16, #:lo12:{old_open_common}]
+            adrp x16, {1}
+            ldr x16, [x16, #:lo12:{1}]
             br x16"#,
-            new_open_common = sym new_open_common,
-            old_open_common = sym OLD_OPEN_COMMON,
+            sym new_open_common,
+            sym OLD_OPEN_COMMON,
             options(noreturn)
         );
     }
