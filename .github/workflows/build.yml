@@ -31,6 +31,8 @@ jobs:
           cargo install cargo-ndk
 
       - name: Build project
+        env:
+          RUSTFLAGS: "-C relocation-model=pic"
         run: just package-release
 
       - name: Upload built artifact
