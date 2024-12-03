@@ -1,11 +1,8 @@
-#![feature(naked_functions)]
-
 use dobby_rs::Address;
 use jni::JNIEnv;
 use log::{error, info, trace};
 use nix::{fcntl::OFlag, sys::stat::Mode};
 use std::arch::asm;
-use std::arch::naked_asm;
 use std::{
     fs::File,
     io::Read,
@@ -94,7 +91,7 @@ static mut OLD_OPEN_COMMON: usize = 0;
 #[naked]
 pub extern "C" fn new_open_common_wrapper() {
     unsafe {
-        naked_asm!(
+        asm!(
             r#"
             sub sp, sp, 0x280
             stp x29, x30, [sp, #0]
@@ -120,7 +117,7 @@ pub extern "C" fn new_open_common_wrapper() {
             br x16"#,
             new_open_common = sym new_open_common,
             old_open_common = sym OLD_OPEN_COMMON,
-            // options(noreturn)
+            options(noreturn)
         );
     }
 }
